@@ -3,12 +3,12 @@ module github.com/zalfrie/chatbot-ai/backend
 go 1.24
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/websocket v1.5.3
 	github.com/jmoiron/sqlx v1.3.5
+	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.9.0
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/crypto v0.39.0
