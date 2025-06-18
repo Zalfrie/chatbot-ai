@@ -16,6 +16,12 @@ func main() {
 	}
 
 	e := echo.New()
+	// Enable CORS for frontend
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:8080"},
+		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.OPTIONS},
+		AllowHeaders: []string{echo.HeaderAuthorization, echo.HeaderContentType},
+	}))
 	e.Use(middleware.Logger(), middleware.Recover())
 
 	cfg := config.LoadConfig()

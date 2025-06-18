@@ -19,37 +19,55 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-import io from 'socket.io-client';
 import axios from 'axios';
 import store from '@/store';
 import router from '@/router';
 
 export default {
+  name: 'ChatRoom',
   setup() {
     const messages = ref([]);
     const input = ref('');
     const token = store.state.token;
-    const socket = io('http://localhost:1323/ws', { auth: { token } });
 
-    socket.on('message', (m) => messages.value.push(m));
-
-    function send() {
-      if (!input.value) return;
-      socket.emit('message', { content: input.value, private: false });
-      input.value = '';
-    }
-
+    // Establish a native WebSocket connection to Echo backend
+    let socket;
     onMounted(async () => {
+      // Verify authentication
       try {
-        const res = await axios.get('http://localhost:1323/api/memory', {
+        await axios.get('http://localhost:1323/api/memory', {
           headers: { Authorization: `Bearer ${token}` }
         });
-        messages.value = res.data;
       } catch {
         router.push('/login');
+        return;
       }
+
+      // Connect to /api/ws endpoint
+      socket = new WebSocket(`ws://localhost:1323/api/ws`);
+
+      socket.addEventListener('open', () => {
+        console.log('WebSocket connected');
+      });
+
+      socket.addEventListener('message', (event) => {
+        const msg = JSON.parse(event.data);
+        messages.value.push(msg);
+      });
+
+      socket.addEventListener('close', () => {
+        console.log('WebSocket disconnected');
+      });
     });
+
+    function send() {
+      if (!input.value || socket.readyState !== WebSocket.OPEN) return;
+      const payload = { content: input.value, private: false };
+      socket.send(JSON.stringify(payload));
+      input.value = '';
+    }
 
     return { messages, input, send };
   }
 };
+</script>
