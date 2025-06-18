@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"time"
 
@@ -12,7 +13,6 @@ import (
 	"github.com/zalfrie/chatbot-ai/backend/config"
 	"github.com/zalfrie/chatbot-ai/backend/models"
 	"github.com/zalfrie/chatbot-ai/backend/utils"
-	
 )
 
 // Register new user (default role = user)

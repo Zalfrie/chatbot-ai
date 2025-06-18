@@ -11,4 +11,8 @@ type User struct {
 	Password  string    `db:"password" json:"-"`
 	Role      string    `db:"role" json:"role"` // "user" or "admin"
 	CreatedAt time.Time `db:"created_at" json:"created_at"`
+
+	// Fields for password reset
+	ResetToken  string    `db:"reset_token" json:"-"`
+	TokenExpiry time.Time `db:"token_expiry" json:"-"`
 }
